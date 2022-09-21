@@ -1,37 +1,47 @@
 let boxes = document.querySelectorAll('td')
+let reset = document.querySelector('div')
+let winner = document.getElementById('winner')
+let result = localStorage.getItem('result') ? JSON.parse(localStorage.getItem('result')) : ['', '', '', '', '', '', '', '', '']
 let affichage = () => boxes.forEach((boxe, i) => {
-    boxe.innerHTML = localStorage.getItem(i) ? localStorage.getItem(i) : ''
+    boxe.innerHTML = result[i]
 })
 affichage()
 let player = true
 let verification = () => {
-    let box1 = localStorage.getItem('0') ? localStorage.getItem('0') : '0'
-    let box2 = localStorage.getItem('1') ? localStorage.getItem('1') : '1'
-    let box3 = localStorage.getItem('2') ? localStorage.getItem('2') : '2'
-    let box4 = localStorage.getItem('3') ? localStorage.getItem('3') : '3'
-    let box5 = localStorage.getItem('4') ? localStorage.getItem('4') : '4'
-    let box6 = localStorage.getItem('5') ? localStorage.getItem('5') : '5'
-    let box7 = localStorage.getItem('6') ? localStorage.getItem('6') : '6'
-    let box8 = localStorage.getItem('7') ? localStorage.getItem('7') : '7'
-    let box9 = localStorage.getItem('8') ? localStorage.getItem('8') : '8'
-    console.log(box1 == box2 == box3)
+    let possibilite = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
+    possibilite.forEach(p => {
+        if(result[p[0]] != "" && result[p[0]] == result[p[1]] && result[p[0]] == result[p[2]]){
+            boxes.forEach(boxe => boxe.removeEventListener('click', clickFunction))
+            let box1 = document.getElementById(p[0])
+            let box2 = document.getElementById(p[1])
+            let box3 = document.getElementById(p[2])
+            box1.style.color = "red"
+            box2.style.color = "red"
+            box3.style.color = "red"
+            winner.innerHTML = player ? 'Player O won' : 'Player X won'
+        }
+    })
 }
+verification()
 let clickFunction = (e) => {
     if(e.target.innerHTML == ''){
         let value = player ? 'X' : 'O'
         e.target.innerHTML = value
-        localStorage.setItem(e.target.id, value)
+        result[e.target.id] = value
+        localStorage.setItem('result', JSON.stringify(result))
         player = !player
         verification()
     }
 }
 boxes.forEach(boxe => boxe.addEventListener('click', clickFunction))
-
-// 1 2 3
-// 4 5 6
-// 7 8 9
-// 1 4 7
-// 2 5 8
-// 3 6 9
-// 1 5 9
-// 3 5 7
+reset.addEventListener('click', () => {
+    winner.innerHTML = ''
+    result = ['', '', '', '', '', '', '', '', '']
+    localStorage.setItem('result', JSON.stringify(result))
+    affichage()
+    boxes.forEach(boxe => {
+        boxe.addEventListener('click', clickFunction)
+        boxe.style.color = 'black'
+        player = true
+    })
+})
