@@ -31,7 +31,7 @@ h1, p {
 span {
     font-weight: bold;
 }
-div {
+#replay, #reset {
     margin: auto;
     width: 80px;
     height: 25px;
@@ -41,4 +41,7 @@ div {
     padding-top: 10px;
     border-radius: 5px;
     color: white;
+}
+#reset {
+    background-color: red;
 }
